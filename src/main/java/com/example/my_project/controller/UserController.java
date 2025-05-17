@@ -1,122 +1,82 @@
 package com.example.my_project.controller;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.example.my_project.dto.UserResponse;
 import com.example.my_project.entity.UserEntity;
-import com.example.my_project.repository.UserRepository;
-import io.github.cdimascio.dotenv.Dotenv;
+import com.example.my_project.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-    private final UserRepository userRepository;
 
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
-
-    private static final long EXPIRATION_TIME = 60 * 60 * 1000 * 24 * 7; // 1 week
 
     @GetMapping
     public List<UserEntity> getAllUser() {
-        return userRepository.findAll();
+        return userService.findAll();
     }
 
     @GetMapping("/{id}")
     public UserEntity getUserById(@PathVariable Long id) {
-        return userRepository.findById(id).orElse(null);
+        return userService.findById(id);
     }
 
     @PostMapping
     public UserEntity createUser(@RequestBody UserEntity user) {
-        return userRepository.save(user);
+        return userService.createUser(user);
     }
 
     @PutMapping("/{id}")
     public UserEntity updateUser(@PathVariable Long id, @RequestBody UserEntity user) {
-        UserEntity userToUpdate = userRepository.findById(id).orElse(null);
-        if (userToUpdate == null) {
-            throw new IllegalArgumentException("User not found.");
-        }
-
-        userToUpdate.setUsername(user.getUsername());
-        userToUpdate.setEmail(user.getEmail());
-        return userRepository.save(userToUpdate);
+        return userService.updateUser(id, user);
     }
 
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
-        userRepository.deleteById(id);
+        userService.deleteUser(id);
     }
 
     @PostMapping("/signin")
     public UserEntity signIn(@RequestBody UserEntity user) {
-        String username = user.getUsername();
-        String email = user.getEmail();
-        UserEntity userToSignIn = userRepository.findByUsernameAndEmail(username, email);
-        if (userToSignIn == null) {
-            throw new IllegalArgumentException("User not found.");
-        }
-        return userToSignIn;
-    }
-
-    private String getSecret() {
-        Dotenv dotenv = Dotenv.configure()
-                .directory(System.getProperty("user.dir"))
-                .load();
-        return dotenv.get("JWT_SECRET");
-    }
-
-    private Algorithm getAlgorithm() {
-        return Algorithm.HMAC256(getSecret());
+        return userService.signIn(user);
     }
 
     @PostMapping("/admin-signin")
-    public String adminSignin(@RequestBody UserEntity user) {
-        try {
-            String username = user.getUsername();
-            String password = user.getPassword();
-            UserEntity userForCreateToken = userRepository.findByUsernameAndPassword(username, password);
-            return JWT.create()
-                    .withSubject(String.valueOf(userForCreateToken.getId()))
-                    .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                    .withIssuedAt(new Date())
-                    .sign(getAlgorithm());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Error creating token");
-        }
+    public String adminSignIn(@RequestBody UserEntity user) {
+        return userService.signInForAdmin(user);
     }
 
     @GetMapping("/admin-info")
     public UserResponse adminInfo(@RequestHeader("Authorization") String token) {
-        try {
-            if (token == null || !token.startsWith("Bearer ")) {
-                throw new IllegalArgumentException("Invalid token format with 'Bearer '");
-            }
+        return userService.getAdminInfo(token);
+    }
 
-            String tokenWithoutBearer = token.replace("Bearer ", "");
-            if (tokenWithoutBearer.trim().isEmpty()) {
-                throw new IllegalArgumentException("Token is empty");
-            }
+    @PostMapping("/admin-edit-profile")
+    public UserEntity adminEditProfile(@RequestHeader("Authorization") String token,
+                                       @RequestBody UserEntity user) {
+        return userService.editProfileAdmin(token, user);
+    }
 
-            String subject = JWT.require(getAlgorithm())
-                    .build()
-                    .verify(tokenWithoutBearer)
-                    .getSubject();
-            Long userId = Long.valueOf(subject);
-            UserEntity user = userRepository.findById(userId).orElse(null);
-            if (user == null) {
-                throw new IllegalArgumentException("User not found");
-            }
+    @PostMapping("/admin-update/{id}")
+    public UserEntity adminUpdate(@PathVariable Long id, @RequestBody UserEntity user) {
+        return userService.updateAdmin(id, user);
+    }
 
-            return new UserResponse(user.getId(), user.getUsername(), user.getEmail());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Authorization error: " + e.getMessage());
-        }
+    @PostMapping("/admin-create")
+    public UserEntity adminCreate(@RequestHeader("Authorization") String token,
+                                  @RequestBody UserEntity user) {
+        return userService.createAdmin(token, user);
+    }
+
+    @DeleteMapping("/admin-delete/{id}")
+    public void adminDelete(@RequestHeader("Authorization") String token,
+                            @PathVariable Long id) {
+        userService.deleteAdmin(id);
     }
 }
