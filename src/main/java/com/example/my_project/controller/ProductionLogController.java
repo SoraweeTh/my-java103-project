@@ -28,7 +28,7 @@ public class ProductionLogController {
         return ResponseEntity.ok(productionLogService.createProductionLog(productionLog));
     }
 
-    @PutMapping("/{id}")    //?????????????????????
+    @PutMapping("/{id}")
     public ResponseEntity<ProductionLogEntity> updateProductionLog(
             @PathVariable Long id, @RequestBody ProductionLogEntity productionLog
     ) {
