@@ -41,4 +41,10 @@ public class ProductionController {
     public void deleteProductionById(@PathVariable Long id) {
         productionService.deleteProductionById(id);
     }
+
+
+    @PutMapping("/updatePrice/{id}")
+    public void updateProductionPrice(@PathVariable Long id, @RequestBody ProductionEntity production) {
+        productionService.updateProductPrice(id, production);
+    }
 }

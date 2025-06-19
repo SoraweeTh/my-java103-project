@@ -39,6 +39,7 @@ public class ProductionService {
             }
             productionToUpdate.setName(product.getName());
             productionToUpdate.setDetail(product.getDetail());
+            productionToUpdate.setPrice(product.getPrice());
 
             return productionRepository.save(productionToUpdate);
         } catch (IllegalArgumentException e) {
@@ -48,5 +49,12 @@ public class ProductionService {
 
     public void deleteProductionById(Long id) {
         productionRepository.deleteById(id);
+    }
+
+    public void updateProductPrice(Long id, ProductionEntity production) {
+        ProductionEntity productionToUpdatePrice = productionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("ProductionId not found."));
+        productionToUpdatePrice.setPrice(production.getPrice());
+        productionRepository.save(productionToUpdatePrice);
     }
 }
