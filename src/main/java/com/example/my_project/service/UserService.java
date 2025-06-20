@@ -6,6 +6,7 @@ import com.example.my_project.dto.UserResponse;
 import com.example.my_project.entity.UserEntity;
 import com.example.my_project.repository.UserRepository;
 import io.github.cdimascio.dotenv.Dotenv;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -15,11 +16,9 @@ import java.util.List;
 public class UserService {
 
     private static final long EXPIRATION_TIME = 60 * 60 * 1000 * 24 * 7; // 1 week
-    private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    @Autowired
+    private UserRepository userRepository;
 
     private String getSecret() {
         Dotenv dotenv = Dotenv.configure()
@@ -110,7 +109,7 @@ public class UserService {
         }
     }
 
-    private Long getUserIdFromToken(String token) {
+    public Long getUserIdFromToken(String token) {
         String tokenWithoutBearer = token.replace("Bearer ", "");
         if (tokenWithoutBearer.trim().isEmpty()) {
             throw new IllegalArgumentException("Token is empty.");
