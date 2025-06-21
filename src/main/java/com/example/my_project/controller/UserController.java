@@ -1,5 +1,6 @@
 package com.example.my_project.controller;
 
+import com.example.my_project.annotation.RequireAuth;
 import com.example.my_project.dto.UserResponse;
 import com.example.my_project.entity.UserEntity;
 import com.example.my_project.service.UserService;
@@ -18,6 +19,7 @@ public class UserController {
     }
 
     @GetMapping
+    @RequireAuth
     public List<UserEntity> getAllUser() {
         return userService.findAll();
     }
