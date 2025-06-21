@@ -1,0 +1,7 @@
+package com.example.my_project.repository;
+
+import com.example.my_project.entity.BillSaleDetailEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface BillSaleDetailRepository extends JpaRepository<BillSaleDetailEntity, Long> {
+}

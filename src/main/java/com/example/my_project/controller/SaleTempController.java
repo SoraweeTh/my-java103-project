@@ -1,6 +1,8 @@
 package com.example.my_project.controller;
 
 import com.example.my_project.entity.SaleTempEntity;
+import com.example.my_project.jpa.EndSale;
+import com.example.my_project.service.BillSaleService;
 import com.example.my_project.service.SaleTempService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +14,12 @@ import java.util.List;
 public class SaleTempController {
 
     private final SaleTempService saleTempService;
+    private final BillSaleService billSaleService;
 
-    public SaleTempController(SaleTempService saleTempService) {
+    public SaleTempController(SaleTempService saleTempService,
+                              BillSaleService billSaleService) {
         this.saleTempService = saleTempService;
+        this.billSaleService = billSaleService;
     }
 
     @PostMapping
@@ -37,5 +42,11 @@ public class SaleTempController {
     @PutMapping("/{id}")
     public void updateSaleTempQuantity(@PathVariable Long id, @RequestBody SaleTempEntity saleTemp) {
         saleTempService.updateSaleTempQuantity(id, saleTemp);
+    }
+
+    @PostMapping("/endSale")
+    public void endSale(@RequestHeader("Authorization") String token,
+                        @RequestBody EndSale endSale) {
+        billSaleService.endSale(token, endSale);
     }
 }

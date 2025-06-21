@@ -2,9 +2,12 @@ spring:
   application:
     name: my-project
   datasource:
-    url: jdbc:postgresql://ep-dawn-snowflake-a1vogasb-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require
-    username: neondb_owner
-    password: npg_O7Zzd6XAhiRl
+#    url: jdbc:postgresql://ep-dawn-snowflake-a1vogasb-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require
+#    username: neondb_owner
+#    password: npg_O7Zzd6XAhiRl
+    url: jdbc:postgresql://localhost:5432/db_java_103
+    username: postgres
+    password: 1234
     driver-clas-name: org.postgresql.Driver
   jpa:
     hibernate:
