@@ -19,7 +19,6 @@ public class UserController {
     }
 
     @GetMapping
-    @RequireAuth
     public List<UserEntity> getAllUser() {
         return userService.findAll();
     }

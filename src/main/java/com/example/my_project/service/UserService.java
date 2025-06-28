@@ -131,6 +131,7 @@ public class UserService {
 
             userToUpdate.setUsername(user.getUsername());
             userToUpdate.setEmail(user.getEmail());
+            userToUpdate.setRole(user.getRole());
             if (user.getPassword() != null && !user.getPassword().isEmpty()) {
                 userToUpdate.setPassword(user.getPassword());
             }
@@ -150,6 +151,7 @@ public class UserService {
             }
             userToUpdate.setUsername(user.getUsername());
             userToUpdate.setEmail(user.getEmail());
+            userToUpdate.setRole(user.getRole());
             if (user.getPassword() != null && !user.getPassword().isEmpty()) {
                 userToUpdate.setPassword(user.getPassword());
             }
