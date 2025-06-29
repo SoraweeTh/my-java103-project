@@ -25,7 +25,7 @@ public class JwtInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        boolean hasRequireAuth = handlerMethod.getMethodAnnotation(RequireAuth.class) != null;
+        boolean hasRequireAuth = handlerMethod.hasMethodAnnotation(RequireAuth.class);
 
         if (!hasRequireAuth) {
             return true;

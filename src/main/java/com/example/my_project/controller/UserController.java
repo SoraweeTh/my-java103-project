@@ -19,6 +19,7 @@ public class UserController {
     }
 
     @GetMapping
+    @RequireAuth
     public List<UserEntity> getAllUser() {
         return userService.findAll();
     }
@@ -49,7 +50,7 @@ public class UserController {
     }
 
     @PostMapping("/admin-signin")
-    public String adminSignIn(@RequestBody UserEntity user) {
+    public Object adminSignIn(@RequestBody UserEntity user) {
         return userService.signInForAdmin(user);
     }
 

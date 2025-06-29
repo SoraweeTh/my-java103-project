@@ -1,5 +1,6 @@
 package com.example.my_project.controller;
 
+import com.example.my_project.dto.DashboardResponse;
 import com.example.my_project.dto.IncomePerMonth;
 import com.example.my_project.entity.BillSaleDetailEntity;
 import com.example.my_project.entity.BillSaleEntity;
@@ -48,5 +49,10 @@ public class ReportController {
     @PutMapping("/bill-sales/{id}")
     public void updateBillSaleDetail(@PathVariable Long id) {
         reportService.updateBillSale(id);
+    }
+
+    @GetMapping("/dashboard")
+    public DashboardResponse dashboard() {
+        return reportService.showDashboard();
     }
 }

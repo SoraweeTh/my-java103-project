@@ -32,7 +32,7 @@ public class UserService {
     }
 
     public List<UserEntity> findAll() {
-        return userRepository.findAll();
+        return userRepository.findAllByOrderByRole();
     }
 
     public UserEntity findById(Long id) {
@@ -67,16 +67,18 @@ public class UserService {
         return userToSignIn;
     }
 
-    public String signInForAdmin(UserEntity user) {
+    public Object signInForAdmin(UserEntity user) {
         try {
             String username = user.getUsername();
             String password = user.getPassword();
             UserEntity userForCreateToken = userRepository.findByUsernameAndPassword(username, password);
-            return JWT.create()
+            String token = JWT.create()
                     .withSubject(String.valueOf(userForCreateToken.getId()))
                     .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                     .withIssuedAt(new Date())
                     .sign(getAlgorithm());
+            record UserResponse(String token, String role) {}
+            return new UserResponse(token, userForCreateToken.getRole());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Error creating token.");
         }
@@ -103,7 +105,7 @@ public class UserService {
                 throw new IllegalArgumentException("User not found.");
             }
 
-            return new UserResponse(user.getId(), user.getUsername(), user.getEmail());
+            return new UserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getRole());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Authorization error : " + e.getMessage());
         }

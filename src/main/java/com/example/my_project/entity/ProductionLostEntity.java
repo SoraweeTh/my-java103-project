@@ -16,7 +16,7 @@ public class ProductionLostEntity {
     private ProductionEntity production;
 
     private String remark;
-    private double quantity;
+    private int quantity;
     private LocalDateTime createdAt;
 
     public Long getId() {
@@ -43,11 +43,11 @@ public class ProductionLostEntity {
         this.remark = remark;
     }
 
-    public double getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(double quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 

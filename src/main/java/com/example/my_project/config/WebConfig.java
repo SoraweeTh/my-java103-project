@@ -2,11 +2,9 @@ package com.example.my_project.config;
 
 import com.example.my_project.interceptor.JwtInterceptor;
 import io.github.cdimascio.dotenv.Dotenv;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
